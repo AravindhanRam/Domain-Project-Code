@@ -1,0 +1,27 @@
+import schemdraw
+import schemdraw.elements as elm
+
+def draw_voltage_divider(Vin=6, R1=9960, R2=5600, Vout=None):
+    with schemdraw.Drawing() as d:
+        d.config(unit=2.5)
+
+        d += elm.SourceV().up().label(f'Vin\n{Vin} V', loc='top')
+        d += elm.Dot()
+        d += (r1 := elm.Resistor().right().label(f'R1\n{R1} Ω'))
+        d += (vout_node := elm.Dot(open=True))
+        d += (r2 := elm.Resistor().down().label(f'R2\n{R2} Ω'))
+        d += elm.Ground()
+
+        d += elm.Line().right(d.unit * 1.2).at(vout_node.start)
+        d += elm.SourceV().down().label(f'Vout\n{Vout:.2f} V' if Vout is not None else 'Vout', loc='right')
+
+        d.draw()
+
+# Define values
+Vin = 12  # Volts
+R1 = 1000  # Ohms
+R2 = 2000  # Ohms
+Vout = Vin * R2 / (R1 + R2)  # Voltage divider formula
+
+# Call the function with defined values
+draw_voltage_divider(Vin, R1, R2, Vout)
